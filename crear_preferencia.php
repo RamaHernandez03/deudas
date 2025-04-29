@@ -16,9 +16,9 @@ curl_setopt_array($curl, array(
       'unit_price' => 10.00
     ]],
     'back_urls' => [
-      'success' => 'http://localhost:8000/consulta.html',
-      'failure' => 'http://localhost:8000/',
-      'pending' => 'http://localhost:8000/'
+      'success' => 'deudores-testing.netlify.app/consulta.html',
+      'failure' => 'deudores-testing.netlify.app/',
+      'pending' => 'deudores-testing.netlify.app/pending.html'
     ],
     'auto_return' => 'approved'
   ]),
