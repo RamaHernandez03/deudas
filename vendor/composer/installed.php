@@ -28,6 +28,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'mercadopago/dx-php' => array(
+            'pretty_version' => '3.3.0',
+            'version' => '3.3.0.0',
+            'reference' => 'de7466209efa6fdcc94e1d739e72062b1e93a349',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../mercadopago/dx-php',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'phpmailer/phpmailer' => array(
             'pretty_version' => 'v6.10.0',
             'version' => '6.10.0.0',

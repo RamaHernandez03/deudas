@@ -24,6 +24,10 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
             'PhpOption\\' => 10,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
+        'M' => 
+        array (
+            'MercadoPago\\' => 12,
+        ),
         'G' => 
         array (
             'GrahamCampbell\\ResultType\\' => 26,
@@ -54,6 +58,10 @@ class ComposerStaticInit2185d2f99bcd56787481d9357a5972d3
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'MercadoPago\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mercadopago/dx-php/src/MercadoPago',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (

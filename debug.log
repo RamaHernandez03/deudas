@@ -30,3 +30,13 @@ Correo enviado correctamente
 Archivo PDF borrado
 Finalizando respuesta
 
+----- NUEVA CONSULTA: 2025-04-29 22:40:28 -----
+Consultando URL: https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/20451289471
+Respuesta HTTP Code: 404
+CUIT no registrado en el BCRA (sin deuda)
+Armando PDF
+PDF generado en consulta_20451289471.pdf
+Correo enviado correctamente
+Archivo PDF borrado
+Finalizando respuesta
+
