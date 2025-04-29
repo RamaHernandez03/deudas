@@ -1,0 +1,32 @@
+----- NUEVA CONSULTA: 2025-04-29 03:16:08 -----
+Consultando URL: https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/20451289471
+Respuesta HTTP Code: 500
+Error desconocido HTTP: 500
+----- NUEVA CONSULTA: 2025-04-29 03:17:53 -----
+Consultando URL: https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/20295750937
+Respuesta HTTP Code: 500
+Error desconocido HTTP: 500
+----- NUEVA CONSULTA: 2025-04-29 03:21:25 -----
+Consultando URL: https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/20451289471
+Respuesta HTTP Code: 500
+Error desconocido HTTP: 500
+----- NUEVA CONSULTA: 2025-04-29 13:15:02 -----
+Consultando URL: https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/20451289471
+Respuesta HTTP Code: 404
+CUIT no registrado en el BCRA (sin deuda)
+Armando PDF
+PDF generado en consulta_20451289471.pdf
+Correo enviado correctamente
+Archivo PDF borrado
+Finalizando respuesta
+
+----- NUEVA CONSULTA: 2025-04-29 13:22:06 -----
+Consultando URL: https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/20295750937
+Respuesta HTTP Code: 200
+CUIT encontrado en el BCRA (puede tener deuda)
+Armando PDF
+PDF generado en consulta_20295750937.pdf
+Correo enviado correctamente
+Archivo PDF borrado
+Finalizando respuesta
+

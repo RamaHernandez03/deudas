@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta Deuda BCRA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Video de fondo -->
+  <video autoplay muted loop id="bg-video">
+    <source src="fondo.mp4" type="video/mp4">
+    Tu navegador no soporta videos HTML5.
+  </video>
+
+  <!-- Capa oscura encima del video -->
+  <div class="overlay"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">Mi Logo</div>
+    <a href="#contacto" class="contact-btn">Contacto</a>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="hero-content">
+    <h1>Buscar mis deudas</h1>
+    <p>Para solicitar tus deudas haga click abajo</p>
+    <a href="consulta.html" class="hero-button">Solicitar Deuda</a>
+  </div>
+
+  
+
+</body>
+</html>
+
+
+
+
+//
+
+
+main.js function mostrarMensaje(tipo, texto) {
+  const mensajeDiv = document.getElementById('mensaje');
+  let bgColor, textColor;
+
+  switch (tipo) {
+    case 'error':
+      bgColor = '#ffcccc';
+      textColor = '#cc0000';
+      break;
+    case 'success':
+      bgColor = '#ccffcc';
+      textColor = '#006600';
+      break;
+    case 'warning':
+      bgColor = '#ffe0b3';
+      textColor = '#cc6600';
+      break;
+    default:
+      bgColor = '#e0e0e0';
+      textColor = '#333';
+  }
+
+  mensajeDiv.innerHTML = `
+    <div style="background: ${bgColor}; color: ${textColor}; padding: 15px; font-weight: bold; text-align: center; border-radius: 5px;">
+      ${texto}
+    </div>
+  `;
+}
+
+function buscarDeudaConfirmado(cuit) {
+  mostrarMensaje('', '🔄 Consultando BCRA, por favor espere...');
+
+  fetch(`consulta.php?cuit=${encodeURIComponent(cuit)}`)
+    .then(async res => {
+      let data;
+      try {
+        data = await res.json();
+      } catch (error) {
+        throw new Error('Respuesta no válida del servidor');
+      }
+
+      if (!res.ok) {
+        throw new Error(data.message || 'Error en la consulta');
+      }
+
+      return data;
+    })
+    .then(data => {
+      if (data.status === 'deuda') {
+        mostrarMensaje('error', '🔴 El CUIT tiene deudas registradas. Pronto nos comunicaremos con Usted.');
+      } else if (data.status === 'sindeuda') {
+        mostrarMensaje('success', '🟢 El CUIT no registra deudas. Pronto nos comunicaremos con Usted.');
+      } else {
+        mostrarMensaje('warning', '⚠️ Hubo un problema al procesar la consulta.');
+      }
+    })
+    .catch(err => {
+      console.error('Error:', err);
+      mostrarMensaje('error', `⚠️ ${err.message}`);
+    });
+}
+
+function buscarDeuda() {
+  const cuit = document.getElementById('cuit').value.trim();
+
+  if (cuit.length !== 11 || isNaN(cuit)) {
+    mostrarMensaje('error', '⚠️ CUIT/CUIL inválido. Debe tener 11 dígitos.');
+    return;
+  }
+
+  const modal = document.getElementById('confirmModal');
+  const confirmText = document.getElementById('confirmText');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const cancelBtn = document.getElementById('cancelBtn');
+
+  confirmText.innerText = `¿Estás seguro que querés buscar las deudas del CUIL/CUIT: ${cuit}?`;
+  modal.style.display = 'flex';
+
+  confirmBtn.onclick = function() {
+    modal.style.display = 'none';
+    buscarDeudaConfirmado(cuit);
+  };
+
+  cancelBtn.onclick = function() {
+    modal.style.display = 'none';
+  };
+}
+
+// 
+
+<?php
+
+require 'vendor/autoload.php'; 
+require 'libs/fpdf.php'; 
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Validar CUIT
+if (!isset($_GET['cuit']) || strlen($_GET['cuit']) !== 11 || !ctype_digit($_GET['cuit'])) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'message' => 'CUIT inválido']);
+    exit;
+}
+
+$cuit = $_GET['cuit'];
+$url = "https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/$cuit";
+
+// Consulta al BCRA
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Accept: application/json'
+]);
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+// Manejar respuestas
+if ($httpcode === 404) {
+    $sinDeuda = true;
+    $data = [
+        'results' => [
+            'identificacion' => $cuit,
+            'denominacion' => 'No disponible',
+            'periodos' => [[]]
+        ]
+    ];
+} elseif ($httpcode === 200) {
+    $sinDeuda = false;
+    $data = json_decode($response, true);
+} else {
+    // Otro error
+    http_response_code($httpcode);
+    echo json_encode(['status' => 'error', 'message' => 'Error al consultar BCRA']);
+    exit;
+}
+
+// Crear el PDF
+$pdf = new FPDF();
+$pdf->AddPage();
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->Cell(0, 10, 'Consulta de Deudas - BCRA', 0, 1, 'C');
+$pdf->Ln(5);
+
+$pdf->SetFont('Arial', '', 12);
+$pdf->Cell(0, 10, 'CUIT: ' . $data['results']['identificacion'], 0, 1);
+$pdf->Cell(0, 10, 'Denominación: ' . $data['results']['denominacion'], 0, 1);
+$pdf->Ln(5);
+
+if (!$sinDeuda && !empty($data['results']['periodos'][0]['entidades'])) {
+    foreach ($data['results']['periodos'][0]['entidades'] as $entidad) {
+        $pdf->Cell(0, 8, 'Entidad: ' . ($entidad['entidad'] ?? 'N/A'), 0, 1);
+        $pdf->Cell(0, 8, 'Situación: ' . ($entidad['situacion'] ?? 'N/A'), 0, 1);
+        $pdf->Cell(0, 8, 'Monto: $' . number_format($entidad['monto'] ?? 0, 2), 0, 1);
+        $pdf->Cell(0, 8, 'Días Atraso: ' . ($entidad['diasAtrasoPago'] ?? '0'), 0, 1);
+        $pdf->Ln(4);
+    }
+} else {
+    $pdf->Cell(0, 10, 'No registra deudas en el sistema financiero.', 0, 1);
+}
+
+$file_path = "consulta_$cuit.pdf";
+$pdf->Output('F', $file_path);
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host       = $_ENV['SMTP_HOST'];
+    $mail->SMTPAuth   = true;
+    $mail->Username   = $_ENV['SMTP_USER'];
+    $mail->Password   = $_ENV['SMTP_PASS'];
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = $_ENV['SMTP_PORT'];
+
+    $mail->setFrom($_ENV['SMTP_FROM'], $_ENV['SMTP_FROM_NAME']);
+    $mail->addAddress('ramiro.tomas.hernandez03@gmail.com');
+    $mail->Subject = "Consulta BCRA - CUIT $cuit";
+    $mail->Body    = "Adjuntamos el resultado de la consulta de deudas en PDF.";
+    $mail->addAttachment($file_path);
+
+    $mail->send();
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'Error al enviar correo: ' . $mail->ErrorInfo]);
+    unlink($file_path);
+    exit;
+}
+
+
+unlink($file_path);
+
+echo json_encode(['status' => $sinDeuda ? 'sindeuda' : 'deuda']);
+
+
+
+
+2)
+
+<?php
+
+require 'vendor/autoload.php'; 
+require 'libs/fpdf.php'; 
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Dotenv\Dotenv;
+
+$dotenv = Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+// Validar CUIT
+if (!isset($_GET['cuit']) || strlen($_GET['cuit']) !== 11 || !ctype_digit($_GET['cuit'])) {
+    http_response_code(400);
+    echo json_encode(['status' => 'error', 'message' => 'CUIT inválido']);
+    exit;
+}
+
+$cuit = $_GET['cuit'];
+$url = "https://api.bcra.gob.ar/CentralDeDeudores/v1.0/Deudas/$cuit";
+
+// Consulta al BCRA
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Accept: application/json'
+]);
+$response = curl_exec($ch);
+$httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+// Manejar respuestas
+if ($httpcode === 404) {
+    $sinDeuda = true;
+    $data = [
+        'results' => [
+            'identificacion' => $cuit,
+            'denominacion' => 'No disponible',
+            'periodos' => [[]]
+        ]
+    ];
+} elseif ($httpcode === 200) {
+    $sinDeuda = false;
+    $data = json_decode($response, true);
+} else {
+    // Otro error
+    http_response_code($httpcode);
+    echo json_encode(['status' => 'error', 'message' => 'Error al consultar BCRA']);
+    exit;
+}
+
+// Crear el PDF
+$pdf = new FPDF();
+$pdf->AddPage();
+$pdf->SetFont('Arial', 'B', 14);
+$pdf->Cell(0, 10, 'Consulta de Deudas - BCRA', 0, 1, 'C');
+$pdf->Ln(5);
+
+$pdf->SetFont('Arial', '', 12);
+$pdf->Cell(0, 10, 'CUIT: ' . $data['results']['identificacion'], 0, 1);
+$pdf->Cell(0, 10, 'Denominación: ' . $data['results']['denominacion'], 0, 1);
+$pdf->Ln(5);
+
+if (!$sinDeuda && !empty($data['results']['periodos'][0]['entidades'])) {
+    foreach ($data['results']['periodos'][0]['entidades'] as $entidad) {
+        $pdf->Cell(0, 8, 'Entidad: ' . ($entidad['entidad'] ?? 'N/A'), 0, 1);
+        $pdf->Cell(0, 8, 'Situación: ' . ($entidad['situacion'] ?? 'N/A'), 0, 1);
+        $pdf->Cell(0, 8, 'Monto: $' . number_format($entidad['monto'] ?? 0, 2), 0, 1);
+        $pdf->Cell(0, 8, 'Días Atraso: ' . ($entidad['diasAtrasoPago'] ?? '0'), 0, 1);
+        $pdf->Ln(4);
+    }
+} else {
+    $pdf->Cell(0, 10, 'No registra deudas en el sistema financiero.', 0, 1);
+}
+
+$file_path = "consulta_$cuit.pdf";
+$pdf->Output('F', $file_path);
+
+$mail = new PHPMailer(true);
+
+try {
+    $mail->isSMTP();
+    $mail->Host       = $_ENV['SMTP_HOST'];
+    $mail->SMTPAuth   = true;
+    $mail->Username   = $_ENV['SMTP_USER'];
+    $mail->Password   = $_ENV['SMTP_PASS'];
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port       = $_ENV['SMTP_PORT'];
+
+    $mail->setFrom($_ENV['SMTP_FROM'], $_ENV['SMTP_FROM_NAME']);
+    $mail->addAddress('ramiro.tomas.hernandez03@gmail.com');
+    $mail->Subject = "Consulta BCRA - CUIT $cuit";
+    $mail->Body    = "Adjuntamos el resultado de la consulta de deudas en PDF.";
+    $mail->addAttachment($file_path);
+
+    $mail->send();
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['status' => 'error', 'message' => 'Error al enviar correo: ' . $mail->ErrorInfo]);
+    unlink($file_path);
+    exit;
+}
+
+
+unlink($file_path);
+
+echo json_encode(['status' => $sinDeuda ? 'sindeuda' : 'deuda']);
+
+
+?>
+
+
+
+

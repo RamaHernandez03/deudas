@@ -1,0 +1,51 @@
+<!-- consulta.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consultar Deuda</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">
+      <img src="logofinal.png" alt="Gisela Rios Logo" />
+    </div>  
+    <a href="#contacto" class="contact-btn">Contacto</a>
+  </nav>
+
+  <!-- Video de fondo -->
+  <video autoplay muted loop id="bg-video">
+    <source src="fondo.mp4" type="video/mp4">
+    Tu navegador no soporta videos HTML5.
+  </video>
+  <div class="overlay"></div>
+
+  <!-- Contenido principal de la consulta -->
+  <div class="hero-content">
+    <h1>Ingresá tu CUIL/CUIT</h1>
+    <input type="text" id="cuit" maxlength="11" placeholder="Ej: 20301234567">
+    <button onclick="buscarDeuda()">Buscar Deuda</button>
+
+    <div id="mensaje"></div>
+    <div id="resultado"></div>
+  </div>
+
+  <!-- Modal de confirmación -->
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h2>¿Confirmar búsqueda?</h2>
+      <p id="confirmText">¿Seguro que querés buscar el CUIT?</p>
+      <div class="modal-buttons">
+        <button id="confirmBtn" class="btn-confirm">Sí, buscar</button>
+        <button id="cancelBtn" class="btn-cancel">Cancelar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
