@@ -6,10 +6,24 @@
 }
 
 body, html {
+  margin: 0;
+  padding: 0;
   height: 100%;
-  width: 100%;
   font-family: Arial, sans-serif;
   background-color: transparent;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Sección del formulario */
+.contact-section {
+  max-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+  box-sizing: border-box;
+  margin-top: -200px;
 }
 
 /* Video de fondo */
@@ -23,7 +37,6 @@ body, html {
   z-index: -2;
 }
 
-
 /* Overlay oscuro */
 .overlay {
   position: fixed;
@@ -31,41 +44,125 @@ body, html {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
   z-index: -1;
 }
 
 /* Navbar */
 .navbar {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  padding: 20px 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: transparent;
-  z-index: 10;
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 2;
+  margin-bottom: 60px;
 }
 
-.logo img {
+.navbar .logo img {
   height: 180px;
 }
 
 .contact-btn {
-  color: #fff;
+  color: white;
   text-decoration: none;
-  background: rgba(255, 255, 255, 0.2);
-  padding: 10px 20px;
-  border-radius: 30px;
-  transition: background 0.3s;
+  font-weight: bold;
+  background: #ff4f5a;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
 }
 
-.contact-btn:hover {
-  background: rgba(255, 255, 255, 0.4);
+/* Menú hamburguesa */
+.hamburger {
+  cursor: pointer;
+  width: 30px;
+  height: 25px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 1001;
 }
 
-/* Contenido principal */
+.hamburger span {
+  display: block;
+  height: 4px;
+  background-color: white;
+  border-radius: 2px;
+}
+
+/* Drawer */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: -250px;
+  width: 250px;
+  height: 100%;
+  background-color: #f3f3f3;
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding-top: 60px;
+  color: #6A0DAD;
+  display: flex;
+  flex-direction: column;
+  border-left: 2px solid #ccc;
+}
+
+.drawer.open {
+  right: 0;
+}
+
+.drawer ul {
+  list-style: none;
+  padding: 0 20px;
+}
+
+.drawer ul li {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  font-size: 18px;
+  color: #6A0DAD;
+  border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s;
+  cursor: pointer;
+  margin-top: 50px;
+}
+
+.drawer ul li i {
+  margin-right: 12px;
+  min-width: 20px;
+}
+
+.drawer ul li a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.drawer ul li:hover {
+  background-color: #e5e5e5;
+  border-radius: 8px;
+}
+
+/* Botón de cierre */
+.close-btn {
+  background-color: transparent;
+  color: #6A0DAD;
+  border: none;
+  font-size: 28px;
+  padding: 10px;
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  transition: background-color 0.3s;
+}
+
+.close-btn:hover {
+  background-color: rgba(106, 13, 173, 0.1);
+  border-radius: 50%;
+}
+
+/* Hero */
 .hero-content {
   position: relative;
   height: 100vh;
@@ -76,35 +173,40 @@ body, html {
   text-align: center;
   color: #fff;
   padding: 0 20px;
+  margin-top: -220px;
 }
 
 .hero-content h1 {
-  font-size: 3rem;
+  font-size: 4rem;
   margin-bottom: 20px;
 }
 
 .hero-content p {
-  font-size: 1.2rem;
+  margin-top: 20px;
+  font-size: 1.5rem;
   margin-bottom: 30px;
 }
 
 .hero-button {
-  background-color: #d4af7f;
-  color: #000;
-  padding: 15px 30px;
-  border-radius: 50px;
+  background-color: #ffd153;
+  color: #333;
+  padding: 15px;
+  border-radius: 5px;
   text-decoration: none;
   font-weight: bold;
   transition: background-color 0.3s;
+  border: 2px solid transparent;
 }
 
 .hero-button:hover {
-  background-color: #c1985c;
+  background-color: transparent;
+  border-color:#ffd153;
+  color: #fefefe
 }
 
-/* Estilos para inputs y botones generales */
+/* Inputs y botones */
 input {
-  padding: 8px;
+  padding: 15px;
   margin: 10px 0;
   width: 100%;
   max-width: 400px;
@@ -113,27 +215,24 @@ input {
 }
 
 button {
-  padding: 10px 20px;
-  cursor: pointer;
-  background-color: #d4af7f;
-  color: #000;
-  border: none;
+  background-color: #ffd153;
+  color: #333;
+  padding: 15px;
   border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
   transition: background-color 0.3s;
+  border: 2px solid transparent;
+  margin-top: 10px;
 }
 
 button:hover {
-  background-color: #c1985c;
+  background-color: transparent;
+  border-color:#ffd153;
+  color: #fefefe
 }
 
-/* Mensaje */
-#mensaje {
-  margin-top: 20px;
-  color: #fff;
-  font-weight: bold;
-}
-
-/* Tabla de resultados */
+/* Tabla */
 table {
   margin-top: 20px;
   border-collapse: collapse;
@@ -150,7 +249,7 @@ th, td {
 
 /* Modal */
 .modal {
-  display: none; /* Oculto por defecto */
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -206,7 +305,140 @@ th, td {
   cursor: pointer;
 }
 
-/* Responsive para móviles */
+/* Sección del formulario */
+.contact-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+  min-height: 100vh;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+/* Formulario */
+.contact-form {
+  background: rgba(0, 0, 0, 0.1); /* fondo oscuro semi-transparente */
+  backdrop-filter: blur(10px);    /* efecto de vidrio borroso */
+  -webkit-backdrop-filter: blur(10px); /* compatibilidad con Safari */
+  padding: 2rem;
+  border: 2px solid #ffd153;
+  border-radius: 5px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+  margin-top: 100px;
+}
+
+
+.contact-form h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+  color: #fefefe;
+}
+
+.contact-form label {
+  display: block;
+  margin-top: 1rem;
+  color: #fff;
+  font-weight: 500;
+  width: 100%; /* Fuerza a ocupar todo el ancho del form */
+  max-width: 100%; /* Se alinea con los inputs */
+  box-sizing: border-box;
+}
+
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  font-size: 1rem;
+
+}
+
+.contact-form button {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #ffd153;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.contact-form button:hover {
+  background-color: #ffc321;
+}
+
+.back-button {
+  display: block; /* hace que respete el width: 100% */
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #ffd153;
+  color: #333;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #ffc321;
+}
+
+
+
+
+/* Loader para redirección */
+.loader {
+  border: 5px solid rgba(255, 255, 255, 0.3);
+  border-top: 5px solid #d4af7f;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 30px auto;
+  display: none;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.redirect-message {
+  text-align: center;
+  color: #fff;
+  font-weight: bold;
+  margin-top: 20px;
+  display: none;
+}
+
+.footer {
+  background: transparent;
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  position: relative;
+  margin-top: 20px;
+  z-index: 1;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .navbar {
     padding: 15px 30px;
@@ -219,5 +451,8 @@ th, td {
   }
   .hero-button {
     padding: 12px 25px;
+  }
+  .contact-form {
+    padding: 1.5rem;
   }
 }

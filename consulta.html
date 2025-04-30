@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Consultar Deuda</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 <body>
 
@@ -13,9 +14,21 @@
   <nav class="navbar">
     <div class="logo">
       <img src="logofinal.png" alt="Gisela Rios Logo" />
-    </div>  
-    <a href="#contacto" class="contact-btn">Contacto</a>
+    </div>
+  
+    <div class="hamburger" id="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
   </nav>
+  
+  <div id="drawer" class="drawer">
+    <button id="closeDrawer" class="close-btn">X</button>
+    <ul>
+      <li><i class="fas fa-question-circle"></i><a href="form.html"> Contacto</a></li>
+    </ul>
+  </div>
 
   <!-- Video de fondo -->
   <video autoplay muted loop id="bg-video">
@@ -27,7 +40,7 @@
   <!-- Contenido principal de la consulta -->
   <div class="hero-content">
     <h1>Ingresá tu CUIL/CUIT</h1>
-    <input type="text" id="cuit" maxlength="11" placeholder="Ej: 20301234567">
+    <input type="text" id="cuit" maxlength="11" placeholder="Ej: 20123456789">
     <button onclick="buscarDeuda()">Buscar Deuda</button>
 
     <div id="mensaje"></div>
@@ -45,6 +58,11 @@
       </div>
     </div>
   </div>
+  
+
+  <footer class="footer">
+    <p>© Copyright - Gisela Rios Abogada</p>
+  </footer>
 
   <script src="main.js"></script>
 </body>

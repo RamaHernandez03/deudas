@@ -74,4 +74,20 @@ function buscarDeuda() {
     modal.style.display = 'none';
   };
 }
+document.addEventListener("DOMContentLoaded", () => {
+  const hamburger = document.getElementById("hamburger");
+  const drawer = document.getElementById("drawer");
+  const closeDrawer = document.getElementById("closeDrawer");
+
+  hamburger.addEventListener("click", () => {
+    drawer.classList.toggle("open");
+  });
+
+  closeDrawer.addEventListener("click", () => {
+    drawer.classList.remove("open");
+  });
+});
+
+
+
 

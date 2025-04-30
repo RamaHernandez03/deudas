@@ -16,9 +16,9 @@ curl_setopt_array($curl, array(
       'unit_price' => 10.00
     ]],
     'back_urls' => [
-      'success' => 'deudores-testing.netlify.app/consulta.html',
-      'failure' => 'deudores-testing.netlify.app/',
-      'pending' => 'deudores-testing.netlify.app/pending.html'
+      'success' => 'https://a333-2803-9800-90c6-802f-b86c-9521-828-c9aa.ngrok-free.app/consulta.html',
+      'failure' => 'https://a333-2803-9800-90c6-802f-b86c-9521-828-c9aa.ngrok-free.app/index.html',
+      'pending' => 'https://a333-2803-9800-90c6-802f-b86c-9521-828-c9aa.ngrok-free.app/pending.html'
     ],
     'auto_return' => 'approved'
   ]),
