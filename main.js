@@ -88,6 +88,31 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.getElementById('contactForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const form = e.target;
+  const formData = new FormData(form);
+
+  const response = await fetch('enviar.php', {
+    method: 'POST',
+    body: formData
+  });
+
+  const text = await response.text();
+
+  if (text.includes('Mensaje enviado correctamente')) {
+    document.getElementById('modalExito').style.display = 'block';
+    form.reset();
+  } else {
+    alert('Error al enviar: ' + text);
+  }
+});
+
+document.getElementById('cerrarModal').addEventListener('click', function() {
+  document.getElementById('modalExito').style.display = 'none';
+});
+
 
 
 

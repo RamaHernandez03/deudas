@@ -40,7 +40,7 @@
 
     <!-- Formulario de contacto -->
     <section id="contacto" class="contact-section">
-        <form class="contact-form">
+        <form class="contact-form" id="contactForm" action="enviar.php" method="POST">
           <h2>Contacta al soporte</h2>
           
           <label for="nombre">Nombre completo</label>
@@ -55,7 +55,15 @@
           <button type="submit">Enviar</button>
           <a href="index.html" class="back-button">Volver a inicio</a>
         </form>
-      </section>   
+      </section>
+      
+      <div id="modalExito" class="modal1">
+        <div class="modal-contenido">
+          <h2>¡Gracias por tu mensaje!</h2>
+          <p>Tu consulta fue enviada correctamente. Te responderemos pronto.</p>
+          <button id="cerrarModal" class="boton-cerrar1">Cerrar</button>
+        </div>
+      </div>
       
       <footer class="footer">
         <p>© Copyright - Gisela Rios Abogada</p>
